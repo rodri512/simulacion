@@ -99,6 +99,18 @@ def evaluar_prueba():
         msg = ">>> SE ACEPTA H0 (Independencia confirmada).\n" if aceptado else ">>> SE RECHAZA H0.\n"
         txt_resultados.insert(tk.END, msg)
 
+    elif prueba == "Corridas Arriba/Abajo del Promedio":
+        chi_cuadrado, aceptado, fo = pe.prueba_corridas_promedio(numeros_generados)
+        txt_resultados.insert(tk.END, f"Frecuencias Observadas: {fo}\nEstadístico X2_0: {chi_cuadrado:.5f}\n")
+        msg = ">>> SE ACEPTA H0 (Distribución Uniforme).\n" if aceptado else ">>> SE RECHAZA H0.\n"
+        txt_resultados.insert(tk.END, msg)
+
+    elif prueba == "Corridas Arriba/Abajo":
+        chi_cuadrado, aceptado, fo = pe.prueba_corridas_arriba_abajo(numeros_generados)
+        txt_resultados.insert(tk.END, f"Frecuencias Observadas: {fo}\nEstadístico X2_0: {chi_cuadrado:.5f}\n")
+        msg = ">>> SE ACEPTA H0 (Distribución Uniforme).\n" if aceptado else ">>> SE RECHAZA H0.\n"
+        txt_resultados.insert(tk.END, msg)
+
 def actualizar_campos(event=None):
     metodo = combo_metodo.get()
     lbl_multiplicador.grid_remove()
@@ -210,7 +222,7 @@ frame_pruebas = tk.LabelFrame(root, text="Pruebas Estadísticas", padx=10, pady=
 frame_pruebas.pack(padx=10, pady=5, fill="x")
 
 tk.Label(frame_pruebas, text="Seleccionar Prueba:").grid(row=0, column=0, sticky="w")
-combo_pruebas = ttk.Combobox(frame_pruebas, values=["Prueba de los Promedios", "Test de las Rachas", "Prueba del Póker", "Prueba de Series"], state="readonly", width=23)
+combo_pruebas = ttk.Combobox(frame_pruebas, values=["Prueba de los Promedios", "Test de las Rachas", "Prueba del Póker", "Prueba de Series", "Corridas Arriba/Abajo del Promedio", "Corridas Arriba/Abajo"], state="readonly", width=30)
 combo_pruebas.grid(row=0, column=1, padx=5)
 combo_pruebas.current(0)
 

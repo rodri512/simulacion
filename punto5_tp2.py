@@ -167,7 +167,7 @@ entry_n.grid(row=0, column=1, pady=2)
 
 # Selección de Método
 tk.Label(frame_inputs, text="Método de Generación:").grid(row=1, column=0, sticky="w", pady=2)
-combo_metodo = ttk.Combobox(frame_inputs, values=["Cuadrados Medios", "Método de Lehmer", "Congruencial Aditivo", "Congruencial Multiplicativo", "Congruencial Mixto"], state="readonly", width=25)
+combo_metodo = ttk.Combobox(frame_inputs, values=["Cuadrados Medios", "Lehmer", "Congruencial Aditivo", "Congruencial Multiplicativo", "Congruencial Mixto"], state="readonly", width=25)
 combo_metodo.grid(row=1, column=1, pady=2)
 # Vincular el evento de cambio en el combobox a nuestra función de actualización
 combo_metodo.bind("<<ComboboxSelected>>", actualizar_campos)

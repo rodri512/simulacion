@@ -76,3 +76,64 @@ def prueba_series(numeros):
             
     aceptado = chi_cuadrado < 36.415
     return chi_cuadrado, aceptado
+
+def prueba_corridas_promedio(numeros):
+    n = len(numeros)
+    # Generar secuencia binaria: 0 si Ui < 0.5 y 1 si Ui > 0.5
+    secuencia = [1 if u > 0.5 else 0 for u in numeros]
+    
+    # Contar Frecuencia Observada (FO) de cada longitud de corrida
+    fo = {}
+    longitud_actual = 1
+    for i in range(1, n):
+        if secuencia[i] == secuencia[i-1]:
+            longitud_actual += 1
+        else:
+            fo[longitud_actual] = fo.get(longitud_actual, 0) + 1
+            longitud_actual = 1
+    fo[longitud_actual] = fo.get(longitud_actual, 0) + 1
+    
+    chi_cuadrado = 0
+    # Calcular FE_i = (N - i + 3) / (2^(i+1))
+    for i, obs in fo.items():
+        fe = (n - i + 3) / (2**(i+1))
+        if fe > 0:
+            chi_cuadrado += ((obs - fe)**2) / fe
+            
+    # Comparación usando X^2_{0.05, 2} = 5.991
+    aceptado = chi_cuadrado < 5.991
+    return chi_cuadrado, aceptado, fo
+
+def prueba_corridas_arriba_abajo(numeros):
+    n = len(numeros)
+    if n < 2:
+        return 0, False, {}
+        
+    # Generar secuencia binaria: 0 si Ui < Ui+1 y 1 si Ui > Ui+1
+    secuencia = []
+    for i in range(n - 1):
+        secuencia.append(1 if numeros[i] > numeros[i+1] else 0)
+        
+    fo = {}
+    longitud_actual = 1
+    for i in range(1, len(secuencia)):
+        if secuencia[i] == secuencia[i-1]:
+            longitud_actual += 1
+        else:
+            fo[longitud_actual] = fo.get(longitud_actual, 0) + 1
+            longitud_actual = 1
+    fo[longitud_actual] = fo.get(longitud_actual, 0) + 1
+    
+    chi_cuadrado = 0
+    for i, obs in fo.items():
+        # FE_i = 2 * [ ((i^2 + 3i + 1)N - (i^3 + 3i^2 - i - 4)) / (i + 3)! ]
+        numerador = ((i**2 + 3*i + 1)*n) - (i**3 + 3*(i**2) - i - 4)
+        denominador = math.factorial(i + 3)
+        fe = 2 * (numerador / denominador)
+        
+        if fe > 0:
+            chi_cuadrado += ((obs - fe)**2) / fe
+            
+    # Comparación usando X^2_{0.05, 2} = 5.991
+    aceptado = chi_cuadrado < 5.991
+    return chi_cuadrado, aceptado, fo
